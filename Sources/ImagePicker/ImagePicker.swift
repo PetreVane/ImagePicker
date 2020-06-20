@@ -2,17 +2,17 @@
 import UIKit
 import AVFoundation
 
-protocol ImagePickerDelegate: AnyObject {
+public protocol ImagePickerDelegate: AnyObject {
     func didSelect(image: UIImage)
 }
 
-class ImagePicker: NSObject {
+public class ImagePicker: NSObject {
     
-    var imagePickerController: UIImagePickerController
-    weak var presentingController: UIViewController?
-    weak var delegate: ImagePickerDelegate?
+    public var imagePickerController: UIImagePickerController
+    public weak var presentingController: UIViewController?
+    public weak var delegate: ImagePickerDelegate?
     
-    init(presentingController: UIViewController, delegate: ImagePickerDelegate) {
+    public init(presentingController: UIViewController, delegate: ImagePickerDelegate) {
         self.imagePickerController = UIImagePickerController()
         super.init()
         self.presentingController = presentingController
@@ -22,7 +22,7 @@ class ImagePicker: NSObject {
         self.imagePickerController.mediaTypes = ["public.image"]
     }
     
-    func selectImageFrom(source type: UIImagePickerController.SourceType, title: String) -> UIAlertAction? {
+    public func selectImageFrom(source type: UIImagePickerController.SourceType, title: String) -> UIAlertAction? {
         
         guard UIImagePickerController.isSourceTypeAvailable(type) else { return nil }
         return UIAlertAction(title: title, style: .default) { [unowned self] (action) in
@@ -33,7 +33,7 @@ class ImagePicker: NSObject {
         }
     }
     
-    func presentAlert(from view: UIView) {
+    public func presentAlert(from view: UIView) {
         
         let alertController = UIAlertController(title: "Pick your Image", message: "Select where your image is saved", preferredStyle: .alert)
         
@@ -55,7 +55,7 @@ class ImagePicker: NSObject {
         self.presentingController?.present(alertController, animated: true, completion: nil)
     }
     
-    func imagePicker(didSelect image: UIImage?, _ controller: UIImagePickerController) {
+    public func imagePicker(didSelect image: UIImage?, _ controller: UIImagePickerController) {
         
         if let selectedImage = image {
             self.delegate?.didSelect(image: selectedImage)
@@ -64,7 +64,7 @@ class ImagePicker: NSObject {
         controller.dismiss(animated: true, completion: nil)
     }
     
-    func allowedCameraAccess() -> Bool {
+    public func allowedCameraAccess() -> Bool {
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         // The user has previously granted access to the camera.
         case .authorized: return true
@@ -88,11 +88,11 @@ class ImagePicker: NSObject {
 
 extension ImagePicker: UIImagePickerControllerDelegate {
     
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+    public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         self.imagePicker(didSelect: nil, picker)
     }
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
         guard let image = info[.editedImage] as? UIImage else { return self.imagePicker(didSelect: nil, picker) }
         self.imagePicker(didSelect: image, picker)
